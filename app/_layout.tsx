@@ -1,3 +1,4 @@
+import { AppTheme } from '@/theme/AppTheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -46,10 +47,9 @@ export default function RootLayout() {
 function RootLayoutNav() {
 
   return (
-    <ThemeProvider value={DarkTheme}>
+    <ThemeProvider value={AppTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
   );
