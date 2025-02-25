@@ -6,9 +6,9 @@ const WEB_FONT_STACK =
 export const AppTheme = {
   dark: false,
   colors: {
-    primary: 'rgb(113, 235, 52)',
-    background: 'rgb(113, 235, 52)',
-    card: 'rgb(255, 255, 255)',
+    primary: 'rgb(93, 177, 51)',
+    background: 'rgb(245, 245, 245)',
+    card: 'rgb(207, 203, 203)',
     text: 'rgb(28, 28, 30)',
     border: 'rgb(52, 235, 143)',
     notification: 'rgb(255, 69, 58)',

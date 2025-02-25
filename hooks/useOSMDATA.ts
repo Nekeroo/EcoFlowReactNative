@@ -9,10 +9,11 @@ export function useOSMData(lat: number | undefined, lon: number | undefined) {
     if (!lat || !lon) return;
 
     async function getMarkers() {
+      if(!lat || !lon) return
       setLoading(true);
       const data = await fetchOSMData(lat, lon);
       setMarkers(data);
-      setLoading(false);
+      setLoading(false)
     }
 
     getMarkers();
