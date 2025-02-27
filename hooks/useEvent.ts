@@ -9,14 +9,16 @@ export function useEvent() {
             {
                 id: 1,
                 name: "Event 1",
-                address: "13 rue Cater",
+                address: "35 rue Marthe Vedrenne",
+                city: "Angoulême",
                 description : "Description 1",
                 nbUsers: 20,
             },
             {
                 id: 2,
                 name: "Event 2",
-                address: "100 rue Vlovir",
+                city: "Bordeaux",
+                address: "70 rue Saint Genes",
                 nbUsers: 20,
             },
         ])

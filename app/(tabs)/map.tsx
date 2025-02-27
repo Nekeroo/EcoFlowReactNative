@@ -5,9 +5,12 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   FlatList,
-  ScrollView,
 } from "react-native";
-import MapView, { Callout, Marker, PROVIDER_DEFAULT, Region } from "react-native-maps";
+import MapView, {
+  Callout,
+  Marker,
+  Region,
+} from "react-native-maps";
 import { useLocation } from "@/hooks/useLocation";
 import React, {
   useCallback,
@@ -24,7 +27,6 @@ import {
 import Checkbox from "expo-checkbox";
 import { handleOpenMaps } from "@/services/mapService";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const DEFAULT_AMENITIES = [
   { key: "recycling", label: "Point de collecte" },
@@ -71,7 +73,7 @@ export default function TabMapScreen() {
   const [loading, setLoading] = useState(false);
   const [markers, setMarkers] = useState<OSMNode[]>([]);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["90%"], []);
+  const snapPoints = useMemo(() => ["75%","90%"], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
@@ -96,12 +98,11 @@ export default function TabMapScreen() {
 
   async function fetchData() {
     setLoading(true);
-    const newMarkers = await fetchOSMData(
-      region!.latitude,
-      region!.longitude,
-      1000,
-      selectedAmenities,
-      selectedRecyclingType
+    const newMarkers = await fetchOSMData({
+      lat: region!.latitude,
+      lon : region!.longitude,
+      amenities : selectedAmenities,
+      recyclingFilters:  selectedRecyclingType}
     );
     setMarkers(newMarkers);
     setLoading(false);
@@ -132,15 +133,13 @@ export default function TabMapScreen() {
     <View style={styles.container}>
       <Text style={styles.title}>Map</Text>
       {errorMsg && <Text>{errorMsg}</Text>}
-
       {/* Bouton de sélection des filtres */}
       <TouchableOpacity
         style={styles.filterButton}
-        onPress={() => handleBottomSheetPress(1)}
+        onPress={() => handleBottomSheetPress(0)}
       >
         <Text style={styles.filterButtonText}>Filtres</Text>
       </TouchableOpacity>
-
       {location && (
         <MapView
           showsCompass={true}
@@ -190,75 +189,75 @@ export default function TabMapScreen() {
           ))}
         </MapView>
       )}
-
       {/* Loader en haut à gauche */}
       {loading && (
         <ActivityIndicator size="large" color="#FFFFFF" style={styles.loader} />
       )}
+      <BottomSheet
+        ref={bottomSheetRef}
+        onChange={handleSheetChanges}
+        snapPoints={snapPoints}
+      >
+        <BottomSheetView style={styles.bottomSheet}>
+          <Text style={styles.modalTitleCentered}>
+            Choisissez les types de recyclage
+          </Text>
 
-        <BottomSheet
-          ref={bottomSheetRef}
-          onChange={handleSheetChanges}
-          snapPoints={snapPoints}
-        >
-          <BottomSheetView style={styles.bottomSheet}>
-            <Text style={styles.modalTitle}>
-              Choisissez les types de recyclage
-            </Text>
+          {/* Liste des catégories (amenities) */}
+          <FlatList
+            data={DEFAULT_AMENITIES}
+            keyExtractor={(item) => item.key}
+            renderItem={({ item }) => (
+              <View style={styles.checkboxContainer}>
+                <Checkbox
+                  value={selectedAmenities.includes(item.key)}
+                  onValueChange={() => toggleAmenity(item.key)}
+                />
+                <Text style={styles.checkboxLabel}>{item.label}</Text>
+              </View>
+            )}
+            scrollEnabled={false} // Empêche la FlatList d’avoir son propre scroll
+            contentContainerStyle={styles.listContainer}
+            style={{width: "90%", maxHeight: "20%"}}
+          />
 
-              {/* Liste des catégories (amenities) */}
-              <FlatList
-                data={DEFAULT_AMENITIES}
-                keyExtractor={(item) => item.key}
-                renderItem={({ item }) => (
-                  <View style={styles.checkboxContainer}>
-                    <Checkbox
-                      value={selectedAmenities.includes(item.key)}
-                      onValueChange={() => toggleAmenity(item.key)}
-                    />
-                    <Text style={styles.checkboxLabel}>{item.label}</Text>
-                  </View>
-                )}
-                scrollEnabled={false} // Empêche la FlatList d’avoir son propre scroll
-              />
+          {/* Séparateur visuel */}
+          <View style={styles.separator} />
 
-              {/* Séparateur visuel */}
-              <View style={styles.separator} />
+          <Text style={styles.modalTitleCentered}>
+            Choisissez les matériaux recyclés
+          </Text>
 
-              <Text style={styles.modalTitle}>
-                Choisissez les matériaux recyclés
-              </Text>
+          {/* Liste des types de recyclage */}
+          <FlatList
+            data={DEFAULT_RECYCLING_TYPE}
+            keyExtractor={(item) =>
+              Array.isArray(item.key) ? item.key[0] : item.key
+            }
+            renderItem={({ item }) => (
+              <View style={styles.checkboxContainer}>
+                <Checkbox
+                  value={selectedRecyclingType.includes(item.key)}
+                  onValueChange={() => toggleRecyclingType(item.key)}
+                />
+                <Text style={styles.checkboxLabel}>{item.label}</Text>
+              </View>
+            )}
+            scrollEnabled={true}
+            style={{ maxHeight: "45%", width: "90%" }}
+            contentContainerStyle={styles.listContainer}
+          />
 
-
-              {/* Liste des types de recyclage */}
-              <FlatList
-                data={DEFAULT_RECYCLING_TYPE}
-                keyExtractor={(item) =>
-                  Array.isArray(item.key) ? item.key[0] : item.key
-                }
-                renderItem={({ item }) => (
-                  <View style={styles.checkboxContainer}>
-                    <Checkbox
-                      value={selectedRecyclingType.includes(item.key)}
-                      onValueChange={() => toggleRecyclingType(item.key)}
-                    />
-                    <Text style={styles.checkboxLabel}>{item.label}</Text>
-                  </View>
-                )}
-                scrollEnabled={true} // Empêche la FlatList d’avoir son propre scroll
-                style={{maxHeight: "45%"}}
-              />
-
-            <TouchableOpacity
-              style={styles.modalButton}
-              onPress={() => {
-                handleBottomSheetClose();
-              }}
-            >
-              <Text style={styles.modalButtonText}>Appliquer</Text>
-            </TouchableOpacity>
-          </BottomSheetView>
-        </BottomSheet>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={() => {
+              handleBottomSheetClose();
+            }}
+          >
+            <Text style={styles.modalButtonText}>Appliquer</Text>
+          </TouchableOpacity>
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   );
 }
@@ -314,17 +313,37 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  scrollContainer: {
+    flexGrow: 0,
+    paddingBottom: 20,
+  },bottomSheet: {
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    alignItems: "center",
+  },
+  modalTitleCentered: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    textAlign: "center",
+    width: "100%",
+  },
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
+    width: "100%",
     marginVertical: 5,
-  },
-  scrollContainer: {
-    flexGrow: 0,
-    paddingBottom: 20
   },
   checkboxLabel: {
     marginLeft: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#ddd",
+    marginVertical: 10,
+    width: "100%",
   },
   modalButton: {
     backgroundColor: "#007AFF",
@@ -338,16 +357,8 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-  bottomSheet: {
-    padding: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    alignItems: "center",
-  },
-  separator: {
-    height: 1,
-    backgroundColor: "#ddd",
-    marginVertical: 10,
+  listContainer: {
+    alignItems: "flex-start",
     width: "100%",
   },
 });

@@ -8,22 +8,27 @@ export interface OSMNode {
   tags: {
     amenity?: string;
     name?: string;
-    recycling_type? : string;
+    recycling_type?: string;
   };
-  adress? : string;
+  adress?: string;
+}
+
+export interface OSMCoordinatesReturnByAddress {
+  lat: number;
+  lon: number;
 }
 
 const DEFAULT_AMENITIES = [
-  "recycling",         // Point de recyclage général
-  "waste_basket",      // Corbeille publique
-  "waste_disposal",    // Centre de collecte des déchets
+  "recycling", // Point de recyclage général
+  "waste_basket", // Corbeille publique
+  "waste_disposal", // Centre de collecte des déchets
 ];
 
 const AMENITY_LABELS: Record<string, string> = {
   recycling: "Point de recyclage",
   waste_basket: "Poubelle publique",
   waste_disposal: "Centre de tri des déchets",
-}
+};
 
 /**
  * Récupère les points d'intérêt depuis l'API Overpass.
@@ -31,64 +36,29 @@ const AMENITY_LABELS: Record<string, string> = {
  * @param lon Longitude de l'utilisateur.
  * @param radius Rayon en mètres (ex: 1000 = 1 km).
  */
-export async function fetchOSMData(lat: number, lon: number, radius: number = 1000, amenities: string[] = DEFAULT_AMENITIES, recyclingFilters : string[] = []): Promise<OSMNode[]> {
-
-  if (amenities.length === 0) {
-    console.warn("Aucun filtre amenity sélectionné !");
-    return [];
-  }
-
-    // Création de la requête pour les amenities
-    const amenityQueries = amenities.map(
-      (amenity) => `node["amenity"="${amenity}"](around:${radius},${lat},${lon});`
-    );
-  
-    // Création de la requête pour le recyclage (ex: `node["recycling:glass_bottles"="yes"]`)
-    const recyclingQueries = recyclingFilters.map(
-      (recyclingType) => `node["recycling:${recyclingType}"="yes"](around:${radius},${lat},${lon});`
-    );
-
-    const overpassQuery = `
-    [out:json];
-    (
-      ${[...amenityQueries, ...recyclingQueries].join("\n")}
-    );
-    out body;
-  `;
-
-  const uri = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`
-  console.log(uri);
+export async function fetchOSMData(params: {
+  lat: number;
+  lon: number;
+  amenities: string[];
+  recyclingFilters: string[];
+}): Promise<OSMNode[]> {
   try {
-    const response = await axios.get(uri);
-
-    
-    return response.data.elements.map((node: OSMNode) => {
-      const amenityType : string = node.tags.amenity ?? "";
-
-      const recyclingData = Object.keys(node.tags)
-        .filter((key) => key.startsWith("recycling:") && node.tags[key] === "yes")
-        .map((key) => key.replace("recycling:", "")); // Supprime "recycling:" du nom
-
-      return {
-        id: node.id,
-        lat: node.lat,
-        lon: node.lon,
-        name: node.tags.name || AMENITY_LABELS[amenityType] || "Lieu de recyclage",
-        tags: {
-          amenity: amenityType,
-          name: node.tags.name || AMENITY_LABELS[amenityType],
-          recycling_type: node.tags.recycling_type
-        }
-      };
-    });
+    console.log(params)
+    const response = await axios.post<OSMNode[]>(
+      "http://10.33.64.251:8080/map/markers",
+      params
+    );
+    return response.data;
   } catch (error) {
     console.error("Erreur lors de la récupération des données OSM:", error);
     return [];
   }
 }
 
-export async function defineMarkerAdress(marker: OSMNode, setMarkerAddresses: Function) {
-
+export async function defineMarkerAdress(
+  marker: OSMNode,
+  setMarkerAddresses: Function
+) {
   const url = `https://nominatim.openstreetmap.org/reverse?lat=${marker.lat}&lon=${marker.lon}&format=json`;
 
   try {
@@ -103,5 +73,22 @@ export async function defineMarkerAdress(marker: OSMNode, setMarkerAddresses: Fu
     }));
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function defineCoordinatesByAddress(params : {
+  address: string,
+  city: string
+}): Promise<OSMCoordinatesReturnByAddress | null> {
+  try {
+    console.log(params)
+    const response = await axios.post<{lat: number, lon: number}>(
+      "http://10.33.64.251:8080/map/reverse",
+      params
+    )
+    return response.data
+  } catch (error) {
+    console.error("Erreur lors de la récupération des coordonnées:", error);
+    return null;
   }
 }

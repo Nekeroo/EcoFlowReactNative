@@ -54,6 +54,24 @@ export default function TabCreateEventScreen() {
         />
         {errors.address && <Text style={styles.error}>Ce champ est requis</Text>}
 
+        <Controller
+          name="city"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <TextInput
+              onBlur={field.onBlur}
+              onChangeText={field.onChange}
+              value={field.value}
+              placeholder="Ex: Ville"
+              placeholderTextColor="#666"
+              style={styles.input}
+            />
+          )}
+        />
+        {errors.city && <Text style={styles.error}>Ce champ est requis</Text>}
+
+
       <Controller
           name="description"
           control={control}

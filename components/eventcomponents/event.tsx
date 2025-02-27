@@ -10,7 +10,7 @@ export default function EventComponent({ event }: EventComponentProps) {
   return (
         <View style={styles.container}>
           <Text style={styles.eventName}>{event.name}</Text>
-          <Text style={styles.address}>📍 {event.address}</Text>
+          <Text style={styles.address}>📍 {event.address}, {event.city}</Text>
           <Text style={styles.participants}>👥 {event.nbUsers} participants</Text>
         </View>
   );
