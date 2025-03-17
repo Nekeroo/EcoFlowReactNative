@@ -27,7 +27,7 @@ const Login = () => {
       console.log(response);
     } catch (error: any) {
       console.log(error);
-      alert("Votre mot de passe et/ou email sont incorrects " + error.message);
+      alert("Votre mot de passe et/ou email sont incorrects ");
     } finally {
       setLoading(false);
     }
@@ -45,6 +45,7 @@ const Login = () => {
       alert("Regardez vos mails ! ");
     } catch (error) {
       console.log(error);
+      alert("Saisissez des informations valides.")
     } finally {
       setLoading(false);
     }

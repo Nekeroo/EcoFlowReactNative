@@ -2,7 +2,7 @@ import Login from '@/components/login/login';
 import { FIREBASE_AUTH } from '@/FirebaseConfig';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import Details from '@/components/userDetails/details'
 
 export default function TabSettingsScreen() {
@@ -16,11 +16,21 @@ export default function TabSettingsScreen() {
     })
   }, [])
 
+  const disconnect = () => {
+    FIREBASE_AUTH.signOut;
+    setUser(null)
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Paramètres</Text>
       <View style={styles.separator}/>
-      { user ? <Details></Details> : <Login></Login> }
+      { user ? 
+      <>
+      <Button title='Deconnexion' onPress={disconnect}/>
+      <Details user={user}></Details>
+       </>
+       : <Login></Login> }
     </View>
   );
 }
@@ -30,7 +40,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
+    paddingTop: 80
   },
   title: {
     fontSize: 20,
