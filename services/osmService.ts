@@ -45,7 +45,7 @@ export async function fetchOSMData(params: {
   try {
     console.log(params)
     const response = await axios.post<OSMNode[]>(
-      "http://10.33.64.251:8080/map/markers",
+      "http://192.168.1.158:8080/map/markers",
       params
     );
     return response.data;
@@ -83,7 +83,7 @@ export async function defineCoordinatesByAddress(params : {
   try {
     console.log(params)
     const response = await axios.post<{lat: number, lon: number}>(
-      "http://10.33.64.251:8080/map/reverse",
+      "http://192.168.1.158:8080/map/reverse",
       params
     )
     return response.data
