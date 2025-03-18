@@ -1,8 +1,4 @@
-import { FIREBASE_AUTH } from "@/FirebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { login, register } from "@/services/authentService";
 import { useState } from "react";
 import {
   View,
@@ -18,34 +14,35 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const auth = FIREBASE_AUTH;
-
   const signIn = async () => {
     setLoading(true);
     try {
-      const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
-    } catch (error: any) {
-      console.log(error);
-      alert("Votre mot de passe et/ou email sont incorrects ");
+      const success = await login({ mail: email, password: password });
+      console.log(success);
+      if (!success) {
+        alert("Mail ou mot de passe incorrect.");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la connexion:", error);
+      alert("Une erreur est survenue lors de la connexion.");
     } finally {
       setLoading(false);
     }
   };
-
   const signUp = async () => {
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      console.log(response);
+      const success = register({
+        lastName: "tata",
+        firstName: "toto",
+        mail: email,
+        password: password,
+      });
+      console.log(success);
       alert("Regardez vos mails ! ");
     } catch (error) {
       console.log(error);
-      alert("Saisissez des informations valides.")
+      alert("Saisissez des informations valides.");
     } finally {
       setLoading(false);
     }
@@ -76,7 +73,7 @@ const Login = () => {
       ) : (
         <>
           <Button title="Se connecter" onPress={signIn} />
-            <Text>Vous n'avez pas encore rejoint EcoFlow ? </Text>
+          <Text>Vous n'avez pas encore rejoint EcoFlow ? </Text>
           <Button title="S'enregistrer" onPress={signUp} />
         </>
       )}

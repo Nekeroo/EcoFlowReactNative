@@ -1,23 +1,14 @@
 import Login from '@/components/login/login';
-import { FIREBASE_AUTH } from '@/FirebaseConfig';
-import { onAuthStateChanged, User } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import Details from '@/components/userDetails/details'
+import { User } from '@/constants/models/user';
 
 export default function TabSettingsScreen() {
 
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log('user : ', user);
-      setUser(user);
-    })
-  }, [])
-
   const disconnect = () => {
-    FIREBASE_AUTH.signOut;
     setUser(null)
   }
 
