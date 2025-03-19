@@ -1,4 +1,4 @@
-import { User } from "firebase/auth";
+import { User } from "@/constants/models/user";
 import { View, Text } from "react-native";
 
 interface DetailsProps {
@@ -9,9 +9,9 @@ const Details = (props: DetailsProps) => {
     return (
         <View>
             <Text>User Details</Text>
-            <Text>Email : {props.user.email}</Text>
-            <Text>Nom : {props.user.displayName}</Text>
-            <Text> Uid : {props.user.uid}</Text>
+            <Text>Email : {props.user.mail}</Text>
+            <Text>Nom : {props.user.lastName}</Text>
+            <Text>Prénom : {props.user.firstName}</Text>
         </View>
     )
 }

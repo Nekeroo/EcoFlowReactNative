@@ -1,3 +1,4 @@
+import { User } from "@/constants/models/user";
 import axios, { AxiosResponse } from "axios";
 
 export interface AuthInput {
@@ -11,31 +12,38 @@ export interface RegisterInput {
     mail: string,
     password: string
 }
-
-export async function login(authParams : AuthInput) : Promise<boolean> {
+    
+export async function login(authParams: AuthInput): Promise<User | null> {
     try {
-        await axios.post<void>(
+        const response = await axios.post<User>(
             "https://ecoflow.mathieugr.fr/auth/login",
             authParams
         );
         
-        // Si la requête réussit (status 204 - NO_CONTENT)
-        return true;
+        // Vérifier que le status est bien 202 (ACCEPTED) et que des données utilisateur sont retournées
+        if(response.status === 202 && response.data) {
+            return response.data;
+        }
+        return null;
     } catch (error) {
-        // En cas d'erreur, retourne simplement false
-        return false;
+        // En cas d'erreur (par exemple 401 UNAUTHORIZED), retourne false
+        return null;
     }
 }
 
-export async function register(registerParams : RegisterInput) : Promise<User> {
+
+export async function register(registerParams : RegisterInput) : Promise<User | null> {
     try {
-        await axios.post<void>(
+        const response = await axios.post<void>(
             "https://ecoflow.mathieugr.fr/auth/register",
             registerParams
         );
-
-        return true;
+        if(response.status === 204 && response.data) {
+            return response.data;
+        }
+        return null;
     } catch (error) {
-        return false;
+        // En cas d'erreur (par exemple 403), retourne false
+        return null;
     }
 }

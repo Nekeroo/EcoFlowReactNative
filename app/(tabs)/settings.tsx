@@ -1,15 +1,15 @@
-import Login from '@/components/login/login';
-import { useEffect, useState } from 'react';
+import Login from '@/components/authcomponents/login';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import Details from '@/components/userDetails/details'
-import { User } from '@/constants/models/user';
+import useUserStore from '@/store/store';
+import { useEffect } from 'react';
 
 export default function TabSettingsScreen() {
 
-  const [user, setUser] = useState<User | null>(null);
+  const { user, logout : logoutStore } = useUserStore();
 
   const disconnect = () => {
-    setUser(null)
+      logoutStore();
   }
 
   return (
