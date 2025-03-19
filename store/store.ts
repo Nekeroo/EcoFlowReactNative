@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthInput, login, RegisterInput } from "@/services/authentService";
+import { AuthInput, login, RegisterInput, UpdateInput, updateUser } from "@/services/authentService";
 import axios from "axios";
 import { User } from "@/constants/models/user";
 
@@ -12,12 +12,13 @@ export interface UserState {
   login: (input: AuthInput) => Promise<User | false>;
   register: (input: RegisterInput) => Promise<User | false>;
   logout: () => void;
+  updateUser: (input : UpdateInput) => Promise<User | null>; 
 }
 
 const useUserStore = create<UserState>()(
   devtools(
     persist(
-      (set) => ({
+      (set, get) => ({
         user: null,
         isLoading: false,
         error: null,
@@ -63,6 +64,24 @@ const useUserStore = create<UserState>()(
         },
 
         logout: () => set({ user: null, error: null }),
+
+        updateUser: async (updateInput: UpdateInput) => {
+          set({ isLoading: true, error: null });
+          try {
+            const updatedUser = await updateUser(updateInput);
+            if (updatedUser) {
+              // Mise à jour du state avec les nouvelles informations utilisateur
+              set({ user: { ...get().user, ...updatedUser }, isLoading: false });
+              return updatedUser;
+            } else {
+              set({ isLoading: false, error: "Échec de la mise à jour" });
+              return null;
+            }
+          } catch (error) {
+            set({ isLoading: false, error: "Erreur lors de la mise à jour" });
+            return null;
+          }
+        },
       }),
       { 
         name: "userStore",

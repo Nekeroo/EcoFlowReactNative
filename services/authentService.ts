@@ -12,6 +12,11 @@ export interface RegisterInput {
     mail: string,
     password: string
 }
+
+export interface UpdateInput {
+    id : number,
+    userInput : RegisterInput
+}
     
 export async function login(authParams: AuthInput): Promise<User | null> {
     try {
@@ -46,4 +51,23 @@ export async function register(registerParams : RegisterInput) : Promise<User | 
         // En cas d'erreur (par exemple 403), retourne false
         return null;
     }
+}
+
+export async function updateUser(updateInput : UpdateInput) : Promise<User | null>{
+
+    try {
+        const response = await axios.put<UpdateInput>("https://ecoflow.mathieugr.fr/auth/update",
+            updateInput
+        )
+        console.log("reponse : " + response);
+
+        if (response.status === 202 && response.data) {
+            
+            return response.data.userInput
+        }
+        return null;
+    } catch (error) {
+        return null;
+    }
+
 }
