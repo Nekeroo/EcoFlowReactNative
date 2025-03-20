@@ -55,6 +55,26 @@ export async function fetchOSMData(params: {
   }
 }
 
+export async function fetchOSMDataOrdered(params : {
+  lat: number;
+  lon: number;
+  amenities: string[];
+  recyclingFilters: string[];
+}) : Promise<Array<Map<number, OSMNode>>> {
+
+  try {
+    console.log(params)
+    const response = await axios.post<Array<Map<number, OSMNode>>>(
+      "https://ecoflow.mathieugr.fr/map/markers",
+      params
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données OSM:", error);
+    return [];
+  }
+}
+
 export async function defineMarkerAdress(
   marker: OSMNode,
   setMarkerAddresses: Function

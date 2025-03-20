@@ -77,13 +77,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     flex: 1,
     justifyContent: "center",
+    width: '80%'
   },
   input: {
     marginVertical: 4,
     height: 50,
     width: "100%",
-    borderWidth: 1,
-    borderRadius: 1,
+    borderRadius: 5,
     padding: 10,
+    borderColor: "gray",
+    borderWidth: 1,
   },
 });

@@ -62,7 +62,6 @@ export async function updateUser(updateInput : UpdateInput) : Promise<User | nul
         console.log("reponse : " + response);
 
         if (response.status === 202 && response.data) {
-            
             return response.data.userInput
         }
         return null;

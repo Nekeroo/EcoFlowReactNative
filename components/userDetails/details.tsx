@@ -1,7 +1,13 @@
 import { User } from "@/constants/models/user";
 import useUserStore from "@/store/userStore";
 import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 
 interface DetailsProps {
   user: User;
@@ -18,22 +24,16 @@ const Details = (props: DetailsProps) => {
     // Préparez l'objet de mise à jour : on met à jour l'email et éventuellement le password si renseigné.
 
     const updatedUser = await update({
-            id: user?.id ?? 0,
-            userInput: {
-                firstName: user?.firstName ?? "",
-                lastName: user?.lastName ?? "",
-                mail: email,
-                password: password
-            }
-        });
-    console.log(updatedUser);
-    if (updatedUser) {
-      setIsEditing(false);
-      // Vous pouvez également mettre à jour localement le champ password si nécessaire (ici, on le réinitialise)
-      setPassword("");
-    } else {
-      setError("Erreur lors de la mise à jour");
-    }
+      id: user?.id ?? 0,
+      userInput: {
+        firstName: user?.firstName ?? "",
+        lastName: user?.lastName ?? "",
+        mail: email,
+        password: password,
+      },
+    });
+    setIsEditing(false);
+    setPassword("");
   };
 
   return (

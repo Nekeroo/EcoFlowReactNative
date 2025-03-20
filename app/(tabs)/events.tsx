@@ -42,9 +42,12 @@ export default function TabEventsScreen() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Évènements</Text>
       <View style={styles.separator} />
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#000" />
-      ) : (
+      {isLoading &&
+        <ActivityIndicator size="large" color="#000" /> }
+      
+      { !isLoading && events!!.length == 0 && <Text>Aucun élément trouvé</Text>}
+
+      { !isLoading && events!!.length >= 0 &&
         <ScrollView 
           style={styles.scrollView}
           refreshControl={
@@ -59,7 +62,7 @@ export default function TabEventsScreen() {
             </View>
           ))}
         </ScrollView>
-      )}
+      }
       {/* BottomSheet en dehors de la boucle */}
       <BottomSheet
         snapPoints={snapPoints}
