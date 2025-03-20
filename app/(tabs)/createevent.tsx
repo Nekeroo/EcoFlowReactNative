@@ -1,6 +1,15 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Controller, useForm } from "react-hook-form";
+import useEventStore from '@/store/eventStore';
+
+type FormInput = {
+  name: string;
+  address: string;
+  city: string;
+  nbUsers: number;
+  description?: string;
+};
 
 export default function TabCreateEventScreen() {
   const {
@@ -10,112 +19,118 @@ export default function TabCreateEventScreen() {
     reset,
   } = useForm<FormInput>();
 
+  const { createEvent } = useEventStore();
+
   const onSubmit = (data: FormInput) => {
-    console.log("Données soumises :", data);
-    reset(); 
+    createEvent({
+      name: data.name,
+      address: data.address,
+      city: data.city,
+      nbUsers: data.nbUsers,
+      description: data.description ?? ""
+    })
+    reset();
+    alert('Evènement crée !')
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <SafeAreaView style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Créer ton Événement !</Text>
-        <Controller
-          name="name"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextInput
-              onBlur={field.onBlur}
-              onChangeText={field.onChange}
-              value={field.value}
-              placeholder="Ex: Collecte"
-              placeholderTextColor="#666"
-              style={styles.input}
-            />
-          )}
-        />
-        {errors.name && <Text style={styles.error}>Ce champ est requis</Text>}
+      <SafeAreaView style={styles.container}>
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Créer ton Événement !</Text>
+          <Controller
+            name="name"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextInput
+                onBlur={field.onBlur}
+                onChangeText={field.onChange}
+                value={field.value}
+                placeholder="Ex: Collecte"
+                placeholderTextColor="#666"
+                style={styles.input}
+              />
+            )}
+          />
+          {errors.name && <Text style={styles.error}>Ce champ est requis</Text>}
 
-        <Controller
-          name="address"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextInput
-              onBlur={field.onBlur}
-              onChangeText={field.onChange}
-              value={field.value}
-              placeholder="Ex: Lieu"
-              placeholderTextColor="#666"
-              style={styles.input}
-            />
-          )}
-        />
-        {errors.address && <Text style={styles.error}>Ce champ est requis</Text>}
+          <Controller
+            name="address"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextInput
+                onBlur={field.onBlur}
+                onChangeText={field.onChange}
+                value={field.value}
+                placeholder="Ex: Lieu"
+                placeholderTextColor="#666"
+                style={styles.input}
+              />
+            )}
+          />
+          {errors.address && <Text style={styles.error}>Ce champ est requis</Text>}
 
-        <Controller
-          name="city"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextInput
-              onBlur={field.onBlur}
-              onChangeText={field.onChange}
-              value={field.value}
-              placeholder="Ex: Ville"
-              placeholderTextColor="#666"
-              style={styles.input}
-            />
-          )}
-        />
-        {errors.city && <Text style={styles.error}>Ce champ est requis</Text>}
+          <Controller
+            name="city"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextInput
+                onBlur={field.onBlur}
+                onChangeText={field.onChange}
+                value={field.value}
+                placeholder="Ex: Ville"
+                placeholderTextColor="#666"
+                style={styles.input}
+              />
+            )}
+          />
+          {errors.city && <Text style={styles.error}>Ce champ est requis</Text>}
 
+          <Controller
+            name="description"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextInput
+                multiline={true}
+                onBlur={field.onBlur}
+                onChangeText={field.onChange}
+                value={field.value}
+                placeholder="Ex: Regroupement pour une collecte déchets"
+                placeholderTextColor="#666"
+                style={styles.description}
+              />
+            )}
+          />
+          {errors.description && <Text style={styles.error}>Ce champ est requis</Text>}
 
-      <Controller
-          name="description"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextInput
-              multiline={true}
-              onBlur={field.onBlur}
-              onChangeText={field.onChange}
-              value={field.value}
-              placeholder="Ex: Regroupement pour une collecte déchets"
-              placeholderTextColor="#666"
-              style={styles.description}
-            />
-          )}
-        />
-        {errors.description && <Text style={styles.error}>Ce champ est requis</Text>}
+          <Controller
+            name="nbUsers"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextInput
+                onBlur={field.onBlur}
+                onChangeText={field.onChange}
+                value={field.value?.toString() || ""}
+                keyboardType="numeric"
+                placeholder="Ex: 20"
+                placeholderTextColor="#666"
+                style={styles.input}
+              />
+            )}
+          />
+          {errors.nbUsers && <Text style={styles.error}>Ce champ est requis</Text>}
 
-        
-        <Controller
-          name="nbUsers"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextInput
-              onBlur={field.onBlur}
-              onChangeText={field.onChange}
-              value={field.value?.toString() || ""}
-              keyboardType="numeric"
-              placeholder="Ex: 20"
-              placeholderTextColor="#666"
-              style={styles.input}
-            />
-          )}
-        />
-        {errors.address && <Text style={styles.error}>Ce champ est requis</Text>}
-
-
-        {/* Bouton de validation */}
-        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
-          <Text style={styles.buttonText}>Enregistrer l'évènement</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          {/* Bouton de validation */}
+          <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
+            <Text style={styles.buttonText}>Enregistrer l'évènement</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 }
@@ -127,9 +142,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 22, // Taille plus grande pour bien mettre en avant le titre
-    textAlign: "center", // Centré sur l’écran // Couleur sombre pour une bonne lisibilité
-    marginVertical: 20, // Espacement en haut et en bas
+    fontSize: 22,
+    textAlign: "center",
+    marginVertical: 20,
   },
   formContainer: {
     width: "85%", 
@@ -173,13 +188,13 @@ const styles = StyleSheet.create({
   },
   description: {
     width: "100%", 
-    height: 120, // Hauteur plus grande pour saisir plusieurs lignes
-    backgroundColor: "#fff", // Fond blanc
-    borderRadius: 5, // Coins arrondis
-    padding: 10, // Espacement interne
-    borderWidth: 1, // Bordure fine
-    borderColor: "gray", // Bordure grise claire
-    textAlignVertical: "top", // Alignement du texte en haut
+    height: 120,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "gray",
+    textAlignVertical: "top",
     paddingHorizontal: 10,
     marginVertical: 10,
     textAlign: "left",

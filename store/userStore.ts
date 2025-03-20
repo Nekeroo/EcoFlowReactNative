@@ -4,16 +4,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthInput, login, RegisterInput, UpdateInput, updateUser } from "@/services/authentService";
 import axios from "axios";
 import { User } from "@/constants/models/user";
+import { UserState } from "./state/userState";
 
-export interface UserState {
-  user: User | null;
-  isLoading: boolean;
-  error: string | null;
-  login: (input: AuthInput) => Promise<User | false>;
-  register: (input: RegisterInput) => Promise<User | false>;
-  logout: () => void;
-  updateUser: (input : UpdateInput) => Promise<User | null>; 
-}
 
 const useUserStore = create<UserState>()(
   devtools(

@@ -1,7 +1,7 @@
 import Login from '@/components/authcomponents/login';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import Details from '@/components/userDetails/details'
-import useUserStore from '@/store/store';
+import useUserStore from '@/store/userStore';
 import { useEffect } from 'react';
 
 export default function TabSettingsScreen() {

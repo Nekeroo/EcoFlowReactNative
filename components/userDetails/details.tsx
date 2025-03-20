@@ -1,5 +1,5 @@
 import { User } from "@/constants/models/user";
-import useUserStore from "@/store/store";
+import useUserStore from "@/store/userStore";
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 

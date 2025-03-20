@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, View, Text, TextInput, StyleSheet, Pressable, ActivityIndicator } from "react-native";
-import useUserStore from "@/store/store";
+import useUserStore from "@/store/userStore";
 
 interface RegisterProps {
   visible: boolean;

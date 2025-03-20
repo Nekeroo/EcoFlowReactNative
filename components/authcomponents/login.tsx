@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator, Button } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import useUserStore from "@/store/store"
+import useUserStore from "@/store/userStore"
 import Register from "./register";
 
 const Login = () => {

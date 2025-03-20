@@ -1,29 +1,40 @@
 import EventComponent from '@/components/eventcomponents/event';
 import EventDetails from '@/components/eventcomponents/eventDetails';
 import { Event } from '@/constants/models/event';
-import { useEvent } from '@/hooks/useEvent';
+import useEventStore from '@/store/eventStore';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { useRef, useMemo, useState, useCallback } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRef, useMemo, useState, useCallback, useEffect } from 'react';
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, RefreshControl } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function TabEventsScreen() {
 
-  const { events } = useEvent();
-
+  const { events, isLoading, getEvent } = useEventStore();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["60%", "85%"], []);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Charger les événements lors du montage du composant
+  useEffect(() => {
+    getEvent();
+  }, [getEvent]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await getEvent();
+    setRefreshing(false);
+  };
+  
 
   const handleOnPress = useCallback((event: Event) => {
     console.log("click", event);
-    console.log("Bottom Sheet Ref ", bottomSheetRef.current)
     setSelectedEvent(event);
     if (bottomSheetRef.current) {
       bottomSheetRef.current.snapToIndex(1);
-    }
-    else {
-      console.log("No bottomSheetRef")
+    } else {
+      console.log("No bottomSheetRef");
     }
   }, []);
 
@@ -31,28 +42,36 @@ export default function TabEventsScreen() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Évènements</Text>
       <View style={styles.separator} />
-      <ScrollView style={styles.scrollView}>
-        {events.map((event) => (
-          <View key={event.id}>
-            <TouchableOpacity onPress={() => handleOnPress(event)}>
-              <EventComponent event={event}></EventComponent>
-            </TouchableOpacity>
-          </View>
-        ))}
-      </ScrollView>
-
-      {/* Déplace la BottomSheet en dehors de la boucle */}
-        <BottomSheet
-          snapPoints={snapPoints}
-          index={-1}
-          ref={bottomSheetRef}
-          enablePanDownToClose={true}
-          onClose={() => setSelectedEvent(null)}
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#000" />
+      ) : (
+        <ScrollView 
+          style={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={"black"}/>
+          }
         >
-          <BottomSheetView style={styles.bottomSheet}>
-            {selectedEvent ? <EventDetails event={selectedEvent} /> : <Text>Aucun événement sélectionné</Text>}
-          </BottomSheetView>
-        </BottomSheet>
+          {events && events.map((event) => (
+            <View key={event.id}>
+              <TouchableOpacity onPress={() => handleOnPress(event)}>
+                <EventComponent event={event} />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      )}
+      {/* BottomSheet en dehors de la boucle */}
+      <BottomSheet
+        snapPoints={snapPoints}
+        index={-1}
+        ref={bottomSheetRef}
+        enablePanDownToClose={true}
+        onClose={() => setSelectedEvent(null)}
+      >
+        <BottomSheetView style={styles.bottomSheet}>
+          {selectedEvent ? <EventDetails event={selectedEvent} /> : <Text>Aucun événement sélectionné</Text>}
+        </BottomSheetView>
+      </BottomSheet>
     </SafeAreaView>
   );
 }

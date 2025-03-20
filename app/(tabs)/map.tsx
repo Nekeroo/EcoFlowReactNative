@@ -27,7 +27,7 @@ import {
 import Checkbox from "expo-checkbox";
 import { handleOpenMaps } from "@/services/mapService";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-
+import { Platform } from "react-native";
 const DEFAULT_AMENITIES = [
   { key: "recycling", label: "Point de collecte" },
   { key: "waste_basket", label: "Poubelle publique" },
