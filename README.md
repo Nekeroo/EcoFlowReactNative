@@ -29,12 +29,14 @@ _EcoFlow_ est une application mobile développée avec **React Native** ayant po
 
 ```bash
 git clone https://github.com/Nekeroo/EcoFlowReactNative.git
+cd ecoflow
 ``` 
 Si vous avec le SSH d'activé :
 ```bash
 git clone git@github.com:Nekeroo/EcoFlowReactNative.git
-```
 cd ecoflow
+```
+
 
 2. **Installer les dépendances :**
 
