@@ -15,7 +15,6 @@ export default function TabEventsScreen() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Charger les événements lors du montage du composant
   useEffect(() => {
     getEvent();
   }, [getEvent]);
@@ -63,7 +62,6 @@ export default function TabEventsScreen() {
           ))}
         </ScrollView>
       }
-      {/* BottomSheet en dehors de la boucle */}
       <BottomSheet
         snapPoints={snapPoints}
         index={-1}

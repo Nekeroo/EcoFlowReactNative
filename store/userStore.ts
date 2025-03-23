@@ -62,7 +62,6 @@ const useUserStore = create<UserState>()(
           try {
             const updatedUser = await updateUser(updateInput);
             if (updatedUser) {
-              // Mise à jour du state avec les nouvelles informations utilisateur
               set({ user: { ...get().user, ...updatedUser }, isLoading: false });
               return updatedUser;
             } else {

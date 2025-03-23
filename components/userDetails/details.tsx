@@ -21,7 +21,6 @@ const Details = (props: DetailsProps) => {
   const [error, setError] = useState("");
 
   const handleSave = async () => {
-    // Préparez l'objet de mise à jour : on met à jour l'email et éventuellement le password si renseigné.
 
     const updatedUser = await update({
       id: user?.id ?? 0,

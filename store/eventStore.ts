@@ -37,7 +37,6 @@ const useEventStore = create<EventState>()(
       try {
         const success = await createEvent(input);
         if (success) {
-          // Optionnel : rafraîchir la liste des événements après création
           await get().getEvent();
           return true;
         } else {

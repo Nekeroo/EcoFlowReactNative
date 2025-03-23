@@ -25,13 +25,11 @@ export async function login(authParams: AuthInput): Promise<User | null> {
             authParams
         );
         
-        // Vérifier que le status est bien 202 (ACCEPTED) et que des données utilisateur sont retournées
         if(response.status === 202 && response.data) {
             return response.data;
         }
         return null;
     } catch (error) {
-        // En cas d'erreur (par exemple 401 UNAUTHORIZED), retourne false
         return null;
     }
 }
@@ -48,7 +46,6 @@ export async function register(registerParams : RegisterInput) : Promise<User | 
         }
         return null;
     } catch (error) {
-        // En cas d'erreur (par exemple 403), retourne false
         return null;
     }
 }

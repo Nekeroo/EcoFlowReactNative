@@ -14,7 +14,6 @@ const Register = ({ visible, onClose }: RegisterProps) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Récupération de la méthode register depuis le store
   const { register: registerStore } = useUserStore();
 
   const handleRegister = async () => {

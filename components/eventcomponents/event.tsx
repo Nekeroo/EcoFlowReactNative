@@ -18,15 +18,15 @@ export default function EventComponent({ event }: EventComponentProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgb(246, 246, 246)", // Fond blanc pour contraste
-    borderRadius: 10, // Coins arrondis
-    padding: 15, // Espacement intérieur
-    marginVertical: 8, // Espacement entre les événements
+    backgroundColor: "rgb(246, 246, 246)", 
+    borderRadius: 10,
+    padding: 15, 
+    marginVertical: 8, 
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1, // Effet d'ombre pour donner du relief
+    shadowOpacity: 0.1, 
     shadowRadius: 4,
-    elevation: 3, // Ombre pour Android
+    elevation: 3,
   },
   eventName: {
     fontSize: 18,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   participants: {
     fontSize: 14,
-    color: "#007AFF", // Couleur bleue pour mettre en valeur les participants
+    color: "#007AFF", 
     fontWeight: "bold",
   },
   

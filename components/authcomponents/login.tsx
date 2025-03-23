@@ -10,7 +10,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
-  // Récupération des méthodes login et register depuis le store
   const { login: loginStore } = useUserStore();
 
   const signIn = async () => {
