@@ -48,3 +48,9 @@ npm install
 ```bash
 npx expo start
 ```
+
+## Détails techniques
+
+Cette application mobile est reliée à une application Backend Quarkus nommé [EcoFlow](https://github.com/Nekeroo/EcoFlowBack).
+
+Celle-ci est hébergée et donc tourne constamment. 
