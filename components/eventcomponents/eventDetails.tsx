@@ -9,9 +9,16 @@ import { EventComponentProps } from "./event";
 import { handleOpenMaps } from "@/services/mapService";
 import { defineCoordinatesByAddress } from "@/services/osmService";
 import { useState } from "react";
+import useUserStore from "@/store/userStore";
+import useEventStore from "@/store/eventStore";
+import { EventDetailsProps } from "@/app/(tabs)/events";
 
-export default function EventDetails({ event }: EventComponentProps) {
+export default function EventDetails({ event, onClose }: EventDetailsProps) {
   const [loading, setLoading] = useState(false);
+
+  const { user } = useUserStore();
+
+  const { deleteEvent, getEvent } = useEventStore();
 
   function handleClickOnAdress(props: { address: string; city: string }) {
     setLoading(true);
@@ -48,6 +55,19 @@ export default function EventDetails({ event }: EventComponentProps) {
           <Text style={styles.participants}>
             👥 {event.nbUsers} participants
           </Text>
+          <Text style={styles.eventDate}>
+            🗓️ {event.date}
+          </Text>
+            <TouchableOpacity
+              onPress={() => {
+                deleteEvent(event.id ?? 0, user?.id ?? 0)
+                getEvent()
+                onClose()
+              }
+              }
+            >
+              <Text>Supprimer</Text>
+            </TouchableOpacity>
         </View>
       }
 
@@ -102,4 +122,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 10,
   },
+  eventDate: {
+    fontSize: 16,
+    color: "#333",
+    marginTop: 5,
+  }
 });

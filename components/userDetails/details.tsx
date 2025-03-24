@@ -7,6 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 interface DetailsProps {
@@ -52,7 +54,7 @@ const Details = (props: DetailsProps) => {
         </>
       ) : (
         <>
-          <Text style={styles.title}>Édition des informations</Text>
+    <Text style={styles.title}>Édition des informations</Text>
           <TextInput
             style={styles.input}
             placeholder="Email"

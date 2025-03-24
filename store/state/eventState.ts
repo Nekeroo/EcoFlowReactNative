@@ -7,4 +7,5 @@ export interface EventState {
     error: string | null;
     getEvent: () => Promise<Array<Event> | null>;
     createEvent: (input: EventInput) => Promise<boolean>;
+    deleteEvent: (idEvent: number, idUser: number) => Promise<void>;
 }

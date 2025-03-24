@@ -1,7 +1,15 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator, Button } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  Button,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import useUserStore from "@/store/userStore"
+import useUserStore from "@/store/userStore";
 import Register from "./register";
 
 const Login = () => {
@@ -37,23 +45,23 @@ const Login = () => {
   };
   return (
     <View style={styles.loginView}>
-      <TextInput
-        value={email}
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#666"
-        autoCapitalize="none"
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        value={password}
-        style={styles.input}
-        secureTextEntry={true}
-        placeholder="Mot de passe"
-        placeholderTextColor="#666"
-        autoCapitalize="none"
-        onChangeText={(text) => setPassword(text)}
-      />
+        <TextInput
+          value={email}
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#666"
+          autoCapitalize="none"
+          onChangeText={(text) => setEmail(text)}
+        />
+        <TextInput
+          value={password}
+          style={styles.input}
+          secureTextEntry={true}
+          placeholder="Mot de passe"
+          placeholderTextColor="#666"
+          autoCapitalize="none"
+          onChangeText={(text) => setPassword(text)}
+        />
 
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     flex: 1,
     justifyContent: "center",
-    width: '80%'
+    width: "80%",
   },
   input: {
     marginVertical: 4,

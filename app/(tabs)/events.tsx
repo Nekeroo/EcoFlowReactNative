@@ -1,11 +1,17 @@
+import CreateEventScreen from '@/components/eventcomponents/createevent';
 import EventComponent from '@/components/eventcomponents/event';
 import EventDetails from '@/components/eventcomponents/eventDetails';
 import { Event } from '@/constants/models/event';
 import useEventStore from '@/store/eventStore';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useRef, useMemo, useState, useCallback, useEffect } from 'react';
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, RefreshControl } from 'react-native';
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, RefreshControl, Button } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+export interface EventDetailsProps {
+  event: Event;
+  onClose: Function
+}
 
 export default function TabEventsScreen() {
 
@@ -14,6 +20,7 @@ export default function TabEventsScreen() {
   const snapPoints = useMemo(() => ["60%", "85%"], []);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [showCreateEvent, setShowCreateEvent] = useState(false);
 
   useEffect(() => {
     getEvent();
@@ -36,6 +43,18 @@ export default function TabEventsScreen() {
       console.log("No bottomSheetRef");
     }
   }, []);
+
+  const openCreateEvent = () => {
+    setShowCreateEvent(true);
+  }
+  
+  const closeCreateEvent = () => {
+    setShowCreateEvent(false);
+  }
+
+  const onCloseBottomSheetView = () => {
+    bottomSheetRef.current?.close();
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -62,6 +81,15 @@ export default function TabEventsScreen() {
           ))}
         </ScrollView>
       }
+
+      <TouchableOpacity 
+        style={styles.buttonCreate}
+        onPress={openCreateEvent}>
+        <Text>Créer</Text>
+      </TouchableOpacity>
+
+      <CreateEventScreen onClose={closeCreateEvent} visible={showCreateEvent} />
+
       <BottomSheet
         snapPoints={snapPoints}
         index={-1}
@@ -70,7 +98,7 @@ export default function TabEventsScreen() {
         onClose={() => setSelectedEvent(null)}
       >
         <BottomSheetView style={styles.bottomSheet}>
-          {selectedEvent ? <EventDetails event={selectedEvent} /> : <Text>Aucun événement sélectionné</Text>}
+          {selectedEvent ? <EventDetails event={selectedEvent} onClose={onCloseBottomSheetView}/> : <Text>Aucun événement sélectionné</Text>}
         </BottomSheetView>
       </BottomSheet>
     </SafeAreaView>
@@ -102,5 +130,19 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: "90%",
+  },
+  buttonCreate: {
+    position: "absolute",
+    bottom: 80,
+    right: 20,
+    backgroundColor: "#007AFF",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderRadius: 50,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    zIndex: 999,
   }
 });

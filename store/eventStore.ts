@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { EventState } from "./state/eventState";
 import { devtools } from "zustand/middleware";
-import { getEvents, createEvent } from "@/services/eventService";
+import { getEvents, createEvent, deleteEvent } from "@/services/eventService";
 import { EventInput } from "@/services/eventService";
 
 const useEventStore = create<EventState>()(
@@ -50,6 +50,17 @@ const useEventStore = create<EventState>()(
           error: "Erreur lors de la création de l'événement"
         });
         return false;
+      }
+    },
+
+    deleteEvent: async (idEvent: number, idUser: number) => {
+      try {
+        await deleteEvent(idEvent, idUser)
+        await useEventStore.getState().getEvent();
+      } catch (error) {
+        set({
+          error: "Erreur lors de la suppression d'event"
+        });
       }
     }
   }))

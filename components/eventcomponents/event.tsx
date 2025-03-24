@@ -5,6 +5,8 @@ export interface EventComponentProps {
   event: Event;
 }
 
+
+
 export default function EventComponent({ event }: EventComponentProps) {
 
   return (
@@ -12,6 +14,7 @@ export default function EventComponent({ event }: EventComponentProps) {
           <Text style={styles.eventName}>{event.name}</Text>
           <Text style={styles.address}>📍 {event.address}, {event.city}</Text>
           <Text style={styles.participants}>👥 {event.nbUsers} participants</Text>
+          <Text style={styles.eventDate}>🗓️ {event.date}</Text>
         </View>
   );
 }
@@ -44,5 +47,9 @@ const styles = StyleSheet.create({
     color: "#007AFF", 
     fontWeight: "bold",
   },
-  
+  eventDate: {
+    fontSize: 14,
+    color: "#333",
+    marginTop: 5,
+  }
 });

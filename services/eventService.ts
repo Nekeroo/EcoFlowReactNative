@@ -6,7 +6,9 @@ export interface EventInput {
     address: string,
     city: string,
     nbUsers: number,
-    description: string
+    description: string,
+    date: string
+    id_member: number,
 }
 
 export async function getEvents(): Promise<Array<Event> | null> {
@@ -28,7 +30,7 @@ export async function createEvent(input: EventInput) : Promise<boolean> {
     try {
         const response = await axios.post<Event>("https://ecoflow.mathieugr.fr/event/create",input);
 
-        if (response.status === 202 && response.data) {
+        if (response.status === 201 && response.data) {
             return true;
         }
 
@@ -38,3 +40,13 @@ export async function createEvent(input: EventInput) : Promise<boolean> {
         return false;
     }
 };
+
+export async function deleteEvent(idEvent: number, idUser: number) : Promise<void>{
+    try {
+        await axios.delete<void>("https://ecoflow.mathieugr.fr/event/delete/" + idUser + "/" + idEvent)
+    } catch(error) {
+        console.error("Erreur lors de la suppression de l'event",
+            error
+        );
+    }
+}

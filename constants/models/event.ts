@@ -5,6 +5,7 @@ export class Event {
     city: string;
     nbUsers: number;
     description?: string;
+    date: string;
     images?: any;
   
     constructor(
@@ -12,8 +13,9 @@ export class Event {
       address: string,
       city: string,
       nbUsers: number,
+      date: string,
       description?: string,
-      images?: any
+      images?: any,
     ) {
       this.id = Math.random();
       this.name = name;
@@ -22,6 +24,7 @@ export class Event {
       this.nbUsers = nbUsers;
       this.description = description;
       this.images = images;
+      this.date = date;
     }
 
 }
